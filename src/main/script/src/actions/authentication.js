@@ -1,8 +1,11 @@
+import axios from 'axios';
 import {
     AUTH_LOGIN,
     AUTH_LOGIN_SUCCESS,
     AUTH_LOGIN_FAILURE
 } from "./ActionTypes";
+
+const loginApi = '/api/login';
 
 /* LOGIN */
 export function loginRequest(email, password) {
@@ -10,11 +13,17 @@ export function loginRequest(email, password) {
         // Inform login API is starting
         dispatch(login());
 
+        // TODO
         // API REQUEST
-
-        // if success => loginSuccess()
-        // else loginFailure()
-    }
+        return axios.post(loginApi, { email, password })
+            .then((response) => {
+            // if (response is SUCCEED) dispatch(loginSuccess(response.userName))
+                dispatch(loginSuccess(email));
+            }).catch((error) => {
+                // if (response is FAILED)
+                dispatch(loginFailure());
+            });
+    };
 }
 
 export function login() {
@@ -23,9 +32,10 @@ export function login() {
     };
 }
 
-export function loginSuccess() {
+export function loginSuccess(email) {
     return {
-        type: AUTH_LOGIN_SUCCESS
+        type: AUTH_LOGIN_SUCCESS,
+        email
     };
 }
 

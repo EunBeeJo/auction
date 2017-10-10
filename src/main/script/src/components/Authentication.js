@@ -11,6 +11,11 @@ class Authentication extends React.Component {
             password: ""
         };
 
+        this.handleLogin = this.handleLogin.bind(this);
+    }
+
+    handleLogin() {
+
     }
 
     render() {
@@ -39,20 +44,30 @@ class Authentication extends React.Component {
         const loginView = (
             <Grid>
                 { inputBox }
-                <Button type="submit">
-                    Login
+                <Button type="submit" onClick={this.handleLogin}>
+                    Sign In
                 </Button>
                 <Button type="submit">
-                    Sign in
+                    Sign Up
                 </Button>
             </Grid>
         );
 
         const registerView = (
             <Grid>
+                <form>
+                    <FormGroup controlId="formHorizontalName">
+                        <Col componentClass={ControlLabel}>
+                            Name
+                        </Col>
+                        <Col>
+                            <FormControl type="name" placeholder="String"/>
+                        </Col>
+                    </FormGroup>
+                </form>
                 { inputBox }
                 <Button type="submit">
-                    Sign in
+                    Sign Up
                 </Button>
             </Grid>
         );
