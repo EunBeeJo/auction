@@ -7,15 +7,42 @@ class Authentication extends React.Component {
         super(props);
 
         this.state = {
+            username: "",
             email: "",
             password: ""
         };
 
         this.handleLogin = this.handleLogin.bind(this);
+        this.handleRegister = this.handleRegister.bind(this);
+        this.handleChange = this.handleChange.bind(this);
     }
 
     handleLogin() {
 
+    }
+
+    handleRegister() {
+        let username = this.state.username;
+        let email = this.state.email;
+        let password = this.state.password;
+
+        this.props.onRegister(username, email, password).then(
+            (result) => {
+                if (!result) {
+                    this.setState({
+                        username: "",
+                        email: "",
+                        password: ""
+                    });
+                }
+            }
+        );
+    }
+
+    handleChange(e) {
+        let nextState = {};
+        nextState[e.target.name] = e.target.value;
+        this.setState(nextState);
     }
 
     render() {
@@ -26,7 +53,11 @@ class Authentication extends React.Component {
                         Email
                     </Col>
                     <Col>
-                        <FormControl type="email" placeholder="Email"/>
+                        <FormControl type="email"
+                                     name="email"
+                                     placeholder="Email"
+                                     value={this.state.email}
+                                     onChange={this.handleChange}/>
                     </Col>
                 </FormGroup>
 
@@ -35,7 +66,11 @@ class Authentication extends React.Component {
                         Password
                     </Col>
                     <Col>
-                        <FormControl type="password" placeholder="Password"/>
+                        <FormControl type="password"
+                                     name="password"
+                                     placeholder="Password"
+                                     value={this.state.password}
+                                     onChange={this.handleChange}/>
                     </Col>
                 </FormGroup>
             </form>
@@ -45,10 +80,10 @@ class Authentication extends React.Component {
             <Grid>
                 { inputBox }
                 <Button type="submit" onClick={this.handleLogin}>
-                    Sign In
+                    Login
                 </Button>
                 <Button type="submit">
-                    Sign Up
+                    Register
                 </Button>
             </Grid>
         );
@@ -58,16 +93,20 @@ class Authentication extends React.Component {
                 <form>
                     <FormGroup controlId="formHorizontalName">
                         <Col componentClass={ControlLabel}>
-                            Name
+                            Username
                         </Col>
                         <Col>
-                            <FormControl type="name" placeholder="String"/>
+                            <FormControl type="text"
+                                         name="username"
+                                         placeholder="String"
+                                         value={this.state.username}
+                                         onChange={this.handleChange}/>
                         </Col>
                     </FormGroup>
                 </form>
                 { inputBox }
-                <Button type="submit">
-                    Sign Up
+                <Button type="submit" onClick={this.handleRegister}>
+                    Register
                 </Button>
             </Grid>
         );
@@ -82,12 +121,14 @@ class Authentication extends React.Component {
 
 Authentication.protoType = {
     mode: PropTypes.bool,
-    onLogin: PropTypes.func
+    onLogin: PropTypes.func,
+    onRegister: PropTypes.func
 };
 
 Authentication.defaultProps = {
     mode: true,
-    onLogin: (email, password) => { console.error("login function not defined"); }
+    onLogin: (email, password) => { console.error("login function not defined"); },
+    onRegister: (username, email, password) => { console.error("register function not defined"); }
 };
 
 export default Authentication;

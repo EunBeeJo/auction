@@ -21,10 +21,10 @@ ReactDOM.render(
     <Provider store={store}>
         <BrowserRouter>
             <div>
-                <Route path='/' component={App}/>
-                <Route path='/home' component={Home}/>
-                <Route path='/login' component={Login}/>
-                <Route path='/register' component={Register}/>
+                <Route path='/auction' component={App}/>
+                <Route path='/auction/home' component={Home}/>
+                <Route path='/auction/login' component={Login}/>
+                <Route path='/auction/register' component={Register}/>
             </div>
         </BrowserRouter>
     </Provider>, document.getElementById('root'));
