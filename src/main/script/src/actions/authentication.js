@@ -56,8 +56,10 @@ export function registerRequest(name, email, password) {
 
         return axios.post(registerApi, { name, email, password })
             .then((response) => {
-                if (response.data.registerStatus === "success") dispatch(registerSuccess());
-                else dispatch(registerFailure(response.data.registerStatusCode));
+                console.log(response.data.status);
+                console.log(response.data.statusCode);
+                if (response.data.status === "success") dispatch(registerSuccess());
+                else dispatch(registerFailure(response.data.statusCode));
             }).catch((error) => {
                 // if (response is FAILED) dispatch(registerFailure(response.error.code))
                 dispatch(registerFailure(error));

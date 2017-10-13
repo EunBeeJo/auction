@@ -13,20 +13,20 @@ public class RegisterResponseMsg {
         EXIST_USERNAME("exist_username", 4),
         EXIST_EMAIL("exist_email", 5);
 
-        private final String registerStatus;
-        private final int registerStatusCode;
+        private final String status;
+        private final int statusCode;
 
-        RegisterStatus(String registerStatus, int registerStatusCode) {
-            this.registerStatus = registerStatus;
-            this.registerStatusCode = registerStatusCode;
+        RegisterStatus(String status, int statusCode) {
+            this.status = status;
+            this.statusCode = statusCode;
         }
 
         public int getStatusCode() {
-            return registerStatusCode;
+            return statusCode;
         }
 
         public String getStatus() {
-            return registerStatus;
+            return status;
         }
 
     }

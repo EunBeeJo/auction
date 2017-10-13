@@ -14,8 +14,8 @@ class Header extends React.Component {
                 </Navbar.Header>
                 <Navbar.Collapse>
                     <Nav pullRight>
-                        <NavItem eventKey={1} href="/auction/login"> <Link to="/auction/login">로그인</Link> </NavItem>
-                        <NavItem eventKey={2} href="/auction/register"> <Link to="/auction/register">회원가입</Link> </NavItem>
+                        <NavItem eventKey={1} href="/login"> <Link to="/login">로그인</Link> </NavItem>
+                        <NavItem eventKey={2} href="/register"> <Link to="/register">회원가입</Link> </NavItem>
                         <NavItem eventKey={3} href="#">장바구니</NavItem>
                         <NavItem eventKey={4} href="#">마이페이지</NavItem>
                     </Nav>
