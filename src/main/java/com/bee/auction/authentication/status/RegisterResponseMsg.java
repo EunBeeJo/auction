@@ -1,31 +1,33 @@
 package com.bee.auction.authentication.status;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 public class RegisterResponseMsg {
 
+    @JsonFormat(shape = JsonFormat.Shape.OBJECT)
     public enum RegisterStatus {
-        SUCCESS(0),
-        BAD_USERNAME(1),
-        BAD_PASSWORD(2),
-        BAD_EMAIL(3),
-        EXIST_USERNAME(4),
-        EXIST_EMAIL(5);
+        SUCCESS("success", 0),
+        BAD_USERNAME("bad_username", 1),
+        BAD_PASSWORD("bad_password", 2),
+        BAD_EMAIL("bad_email", 3),
+        EXIST_USERNAME("exist_username", 4),
+        EXIST_EMAIL("exist_email", 5);
 
-        private final int statusCode;
+        private final String registerStatus;
+        private final int registerStatusCode;
 
-        RegisterStatus(int statusCode) {
-            this.statusCode = statusCode;
+        RegisterStatus(String registerStatus, int registerStatusCode) {
+            this.registerStatus = registerStatus;
+            this.registerStatusCode = registerStatusCode;
         }
 
         public int getStatusCode() {
-            return statusCode;
+            return registerStatusCode;
         }
 
-        public static RegisterStatus getByErrorCode(int statusCode) {
-            for (RegisterStatus registerStatus : RegisterStatus.values()) {
-                if (registerStatus.getStatusCode() == statusCode)
-                    return registerStatus;
-            }
-            return null;
+        public String getStatus() {
+            return registerStatus;
         }
+
     }
 }

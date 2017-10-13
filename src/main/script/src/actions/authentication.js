@@ -50,14 +50,14 @@ export function loginFailure() {
 }
 
 /* REGISTER */
-export function registerRequest(username, email, password) {
+export function registerRequest(name, email, password) {
     return (dispatch) => {
         dispatch(register());
 
-        return axios.post(registerApi, { username, email, password })
+        return axios.post(registerApi, { name, email, password })
             .then((response) => {
-                // if (response is SUCCEED) dispatch(registerSuccess(response.userName))
-                dispatch(registerSuccess());
+                if (response.data.registerStatus === "success") dispatch(registerSuccess());
+                else dispatch(registerFailure(response.data.registerStatusCode));
             }).catch((error) => {
                 // if (response is FAILED) dispatch(registerFailure(response.error.code))
                 dispatch(registerFailure(error));
@@ -73,13 +73,13 @@ export function register() {
 
 export function registerSuccess(){
     return {
-        type: AUTH_LOGIN_SUCCESS
+        type: AUTH_REGISTER_SUCCESS
     };
 }
 
 export function registerFailure(error) {
     return {
-        type: AUTH_LOGIN_FAILURE,
+        type: AUTH_REGISTER_FAILURE,
         error
     }
 }

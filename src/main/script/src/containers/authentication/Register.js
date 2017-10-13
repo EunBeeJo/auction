@@ -9,8 +9,8 @@ class Register extends React.Component {
         this.handleRegister = this.handleRegister.bind(this);
     }
 
-    handleRegister(userName, email, password) {
-        return this.props.registerRequest(userName, email, password).then(
+    handleRegister(name, email, password) {
+        return this.props.registerRequest(name, email, password).then(
             () => {
                 if (this.props.status === "SUCCESS") {
                     console.log("REGISTER SUCCESS");
@@ -45,8 +45,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        registerRequest: (username, email, password) => {
-            return dispatch(registerRequest(username, email, password));
+        registerRequest: (name, email, password) => {
+            return dispatch(registerRequest(name, email, password));
         }
     };
 };
