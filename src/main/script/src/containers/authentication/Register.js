@@ -14,7 +14,7 @@ class Register extends React.Component {
             () => {
                 if (this.props.status === "SUCCESS") {
                     console.log("REGISTER SUCCESS");
-                    this.props.history.push('/auction/login');
+                    this.props.history.push('/login');
                     return true;
                 } else {
                     console.log("REGISTER FAIL " + this.props.errorCode);

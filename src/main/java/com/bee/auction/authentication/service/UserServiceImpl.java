@@ -4,9 +4,12 @@ import com.bee.auction.authentication.model.User;
 import com.bee.auction.authentication.repository.UserRepository;
 import com.bee.auction.authentication.status.RegisterResponseMsg.RegisterStatus;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.Objects;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
@@ -56,4 +59,10 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    @Override
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        User user = userRepository.findByEmail(email);
+        
+        return null;
+    }
 }

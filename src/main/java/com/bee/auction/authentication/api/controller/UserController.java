@@ -3,6 +3,7 @@ package com.bee.auction.authentication.api.controller;
 import com.bee.auction.UrlConstants;
 import com.bee.auction.authentication.model.User;
 import com.bee.auction.authentication.service.UserService;
+import com.bee.auction.authentication.status.LoginResponseMsg.LoginStatus;
 import com.bee.auction.authentication.status.RegisterResponseMsg.RegisterStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,5 +21,10 @@ public class UserController {
     public RegisterStatus register(@RequestBody User user) {
 
         return userService.register(user);
+    }
+
+    @RequestMapping(value = UrlConstants.LOGIN_URL, method = RequestMethod.POST)
+    public LoginStatus login(@RequestBody String email, @RequestBody String password) {
+        return null;
     }
 }
