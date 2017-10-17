@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 @Data
@@ -12,6 +13,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Table(name="AUCTION_USER")
 public class User {
+
     @Id @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "USER_ID")
     Long id;
@@ -25,5 +27,7 @@ public class User {
     @Column(nullable = false)
     String password;
 
-    String role;
+    @ManyToMany
+    @MapsId("ROLE_ID")
+    Set<Role> roles;
 }

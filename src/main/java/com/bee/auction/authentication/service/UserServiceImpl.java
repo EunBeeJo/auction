@@ -1,16 +1,22 @@
 package com.bee.auction.authentication.service;
 
+import com.bee.auction.authentication.model.Role;
 import com.bee.auction.authentication.model.User;
+import com.bee.auction.authentication.repository.RoleRepository;
 import com.bee.auction.authentication.repository.UserRepository;
 import com.bee.auction.authentication.status.RegisterResponseMsg.RegisterStatus;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
@@ -21,9 +27,17 @@ public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
 
     @Autowired
+    private RoleService roleService;
+
+    @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     private static Logger log = Logger.getLogger(UserService.class.getName());
+
+    @Override
+    public User findByEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
 
     @Override
     public RegisterStatus register(User user) {
@@ -32,7 +46,8 @@ public class UserServiceImpl implements UserService {
 
         if (registerResult.equals(RegisterStatus.SUCCESS)) {
             user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-            user.setRole("user");
+
+            user.setRoles(roleService.getUserRoleToSet());
             userRepository.save(user);
         }
 
@@ -62,7 +77,17 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         User user = userRepository.findByEmail(email);
-        
-        return null;
+
+        Set<GrantedAuthority> grantedAuthorities = new HashSet<>();
+        for (Role role : user.getRoles()) {
+            grantedAuthorities.add(new SimpleGrantedAuthority(role.getRole()));
+        }
+
+        return new org.springframework.security.core.userdetails.User(user.getName(), user.getPassword(), grantedAuthorities);
+    }
+
+    @Override
+    public PasswordEncoder passwordEncoder() {
+        return bCryptPasswordEncoder;
     }
 }
