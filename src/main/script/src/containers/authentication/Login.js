@@ -13,16 +13,12 @@ class Login extends React.Component {
         return this.props.loginRequest(email, password).then(
             () => {
                 if (this.props.status === "SUCCESS") {
-                    // create session data
-                    let loginData = {
-                        isLoggedIn: true,
-                        email: email
-                    };
+                    console.log("Login success");
 
-                    document.cookie = 'key=' + btoa(JSON.stringify(loginData));
                     this.props.history.push('/home');
                     return true;
                 } else {
+                    console.log("Login fail");
                     return false;
                 }
             }
@@ -32,7 +28,7 @@ class Login extends React.Component {
     render() {
         return (
             <div>
-                <Authentication mode={true} />
+                <Authentication mode={true} onLogin={this.handleLogin}/>
             </div>
         );
     }

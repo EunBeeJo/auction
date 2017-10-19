@@ -10,9 +10,9 @@ const initialState = {
         error: -1
     },
     status: {
-        valid: false,
         isLoggedIn: false,
-        currentUser: ''
+        currentUser: '',
+        email: ''
     }
 };
 
@@ -35,9 +35,9 @@ export default function authentication(state, action) {
                     status: { $set: 'SUCCESS' }
                 },
                 status: {
-                    valid: { $set: true },
                     isLoggedIn: { $set: true },
-                    currentUser: { $set: action.email }
+                    currentUser: { $set: action.name },
+                    email: { $set: action.email}
                 }
             });
 
@@ -68,6 +68,15 @@ export default function authentication(state, action) {
                 register: {
                     status: { $set: 'FAILURE' },
                     error: { $set: action.error }
+                }
+            });
+
+        case types.AUTH_LOGOUT:
+            return update(state, {
+                status: {
+                    isLoggedIn: { $set: false },
+                    currentUser: { $set: ''},
+                    email: { $set: '' }
                 }
             });
 

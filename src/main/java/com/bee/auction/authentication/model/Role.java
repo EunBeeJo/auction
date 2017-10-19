@@ -1,5 +1,6 @@
 package com.bee.auction.authentication.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -20,5 +21,6 @@ public class Role {
 
     @ManyToMany
     @MapsId("USER_ID")
+    @JsonIgnore
     private Set<User> users;
 }

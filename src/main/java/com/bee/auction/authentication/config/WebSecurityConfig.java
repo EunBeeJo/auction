@@ -11,8 +11,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.session.web.http.HeaderHttpSessionStrategy;
-import org.springframework.session.web.http.HttpSessionStrategy;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 @EnableWebSecurity
@@ -33,7 +32,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.NEVER)
                 .and()
             .authorizeRequests()
-                .antMatchers("/**","/resource/**", "/api/login","/api/register", "/register").permitAll()
+                .antMatchers("/**","/resource/**", "/api/login","/api/register", "/register", "/home/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
             .formLogin()
@@ -43,6 +42,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
                 //.defaultSuccessUrl("/home")
                 .and()
             .logout()
+                .logoutRequestMatcher(new AntPathRequestMatcher("/api/logout"))
+                .invalidateHttpSession(true)
                 .permitAll();
     }
 
@@ -57,8 +58,4 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
         return super.authenticationManagerBean();
     }
 
-    @Bean
-    public HttpSessionStrategy httpSessionStrategy() {
-        return new HeaderHttpSessionStrategy();
-    }
 }

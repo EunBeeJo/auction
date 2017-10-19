@@ -1,13 +1,18 @@
 package com.bee.auction.authentication.service;
 
+import com.bee.auction.authentication.model.AuthUser;
 import com.bee.auction.authentication.model.Role;
 import com.bee.auction.authentication.model.User;
 import com.bee.auction.authentication.repository.RoleRepository;
 import com.bee.auction.authentication.repository.UserRepository;
+import com.bee.auction.authentication.status.AuthenticationToken;
 import com.bee.auction.authentication.status.RegisterResponseMsg.RegisterStatus;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -78,12 +83,7 @@ public class UserServiceImpl implements UserService {
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         User user = userRepository.findByEmail(email);
 
-        Set<GrantedAuthority> grantedAuthorities = new HashSet<>();
-        for (Role role : user.getRoles()) {
-            grantedAuthorities.add(new SimpleGrantedAuthority(role.getRole()));
-        }
-
-        return new org.springframework.security.core.userdetails.User(user.getName(), user.getPassword(), grantedAuthorities);
+        return new AuthUser(user);
     }
 
     @Override

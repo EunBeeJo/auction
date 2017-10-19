@@ -5,11 +5,13 @@ import {
     AUTH_LOGIN_FAILURE,
     AUTH_REGISTER,
     AUTH_REGISTER_SUCCESS,
-    AUTH_REGISTER_FAILURE
+    AUTH_REGISTER_FAILURE,
+    AUTH_LOGOUT
 } from "./ActionTypes";
 
 const loginApi = '/api/login';
 const registerApi = '/api/register';
+const logoutApi = '/api/logout';
 
 /* LOGIN */
 export function loginRequest(email, password) {
@@ -21,8 +23,12 @@ export function loginRequest(email, password) {
         // API REQUEST
         return axios.post(loginApi, { email, password })
             .then((response) => {
-            // if (response is SUCCEED) dispatch(loginSuccess(response.userName))
-                dispatch(loginSuccess(email));
+                console.log(response.data);
+                if (response.data.auth) {
+                    dispatch(loginSuccess(response.data.name, email));
+                } else {
+                    dispatch(loginFailure());
+                }
             }).catch((error) => {
                 // if (response is FAILED)
                 dispatch(loginFailure());
@@ -36,9 +42,10 @@ export function login() {
     };
 }
 
-export function loginSuccess(email) {
+export function loginSuccess(name, email) {
     return {
         type: AUTH_LOGIN_SUCCESS,
+        name,
         email
     };
 }
@@ -84,4 +91,20 @@ export function registerFailure(error) {
         type: AUTH_REGISTER_FAILURE,
         error
     }
+}
+
+/* LOGOUT */
+export function logoutRequest() {
+    return (dispatch) => {
+        return axios.get(logoutApi)
+            .then(() => {
+                dispatch(logout());
+            });
+    };
+}
+
+export function logout() {
+    return {
+        type: AUTH_LOGOUT
+    };
 }

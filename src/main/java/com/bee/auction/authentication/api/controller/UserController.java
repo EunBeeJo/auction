@@ -9,9 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,9 +29,6 @@ public class UserController {
     @Autowired
     private AuthenticationManager authenticationManager;
 
-    @Autowired
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
-
     private static Logger log = Logger.getLogger(UserController.class.getName());
 
     @RequestMapping(value = UrlConstants.REGISTER_URL, method = RequestMethod.POST)
@@ -42,35 +38,23 @@ public class UserController {
     }
 
     @RequestMapping(value = UrlConstants.LOGIN_URL, method = RequestMethod.POST)
-    public AuthenticationToken login(@RequestBody User user, HttpSession httpSession) {
-        String email = user.getEmail();
-        String password = bCryptPasswordEncoder.encode(user.getPassword());
+    public AuthenticationToken login(@RequestBody User user, HttpSession httpSession) throws AuthenticationException{
 
-        log.info("EMAIL : " + email);
-        log.info("PSW : " + password);
+        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword());
+        AuthenticationToken authenticationToken = new AuthenticationToken();
 
-        //UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(email, password);
-        //log.info("usernamePasswordAuthenticationToken : " + usernamePasswordAuthenticationToken.isAuthenticated());
-
-
-        /*
-
-        if (usernamePasswordAuthenticationToken.isAuthenticated()) {
-            Authentication authentication = authenticationManager.authenticate(usernamePasswordAuthenticationToken);
-            log.info("AUTHENTICATION : " + authentication) ;
-            SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
-            log.info("login Success");
+        try {
+            Authentication authentication = authenticationManager.authenticate(token);
+            SecurityContextHolder.getContext().setAuthentication(authentication);
             httpSession.setAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY, SecurityContextHolder.getContext());
+            User authUser = userService.findByEmail(user.getEmail());
+            authenticationToken = new AuthenticationToken(authUser.getEmail(), authUser.getName(), authUser.getRoles(), httpSession.getId(), true);
+        } catch (Exception e) {
+            authenticationToken.setAuth(false);
+            e.printStackTrace();
+        } finally {
+            return authenticationToken;
         }
-        */
 
-        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(email, password);
-        log.info("usernamePasswordAuthenticationToken : " + token.isAuthenticated());
-        Authentication authentication = authenticationManager.authenticate(token);
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        httpSession.setAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY, SecurityContextHolder.getContext());
-
-        User authUser = userService.findByEmail(user.getEmail());
-        return new AuthenticationToken(authUser.getEmail(), authUser.getRoles(), httpSession.getId());
     }
 }
